@@ -1,6 +1,7 @@
 const express = require('express')
 const dotenv = require('dotenv')
-const rateLimit = require('express-rate-limit')
+const rateLimit = require('express-rate-limit');
+const morgan = require('morgan');
 
 
 const companiesRouter = require("./routes/companies.routes")
@@ -21,15 +22,9 @@ const limiter = rateLimit({
 connectDB(process.env.MONGO_URI)
 
 app.use(express.json())
+app.use(morgan('combined'));
 app.use(limiter)
-app.use('/companies', companiesRouter)
-
-app.get("/", (req, res) => {
-    res.status(200).json({
-        message: "I running"
-    })
-})
-
+app.use('/companies', companiesRouter); 
 
 
 app.listen(PORT, () => {
