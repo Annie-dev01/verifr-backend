@@ -35,14 +35,22 @@ const getAllCompanies = async (req, res) => {
   const data = await companyServices.getAllCompanies();
   res.status(data.statusCode).json(data);
 };
+
 //forgot-password function
 const forgotPassword = async (req, res) => {
   const data = await companyServices.forgotPassword(req.body);
   res.status(data.statusCode).json(data);
 };
 
+// resetPassword function
 const resetPassword = async (req, res) => {
   const data = await companyServices.resetPassword(req.body);
+  res.status(data.statusCode).json(data);
+};
+
+// search comapnies function
+const Search = async (req, res) => {
+  const data = await companyServices.Search(req.query);
   res.status(data.statusCode).json(data);
 };
 
@@ -54,4 +62,5 @@ module.exports = {
   getAllCompanies,
   forgotPassword,
   resetPassword,
+  Search,
 };
