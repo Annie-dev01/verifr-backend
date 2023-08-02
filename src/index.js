@@ -5,6 +5,7 @@ const morgan = require('morgan');
 
 
 const companiesRouter = require("./routes/companies.routes")
+const paymentsRouter  = require("./routes/payments.routes")
 const connectDB = require("./configs/database")
 
 dotenv.config()
@@ -25,6 +26,8 @@ app.use(express.json())
 app.use(morgan('combined'));
 app.use(limiter)
 app.use('/companies', companiesRouter); 
+app.use('/payments', paymentsRouter);
+app.use('/webhook', paymentsRouter);
 
 
 app.listen(PORT, () => {

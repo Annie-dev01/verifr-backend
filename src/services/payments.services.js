@@ -19,15 +19,56 @@ const initiatePayment = async (user) => {
         };
 
         const response = await axios.post(process.env.PAYSTACK_URL, body, options)
-        console.log(response);
-        await Transaction.create(body)
-        return responses.buildSuccessResponse("Transaction Initialized", 200, response)
+        console.log(response.data);
+        await Transaction.create({...body, amount: body.amount / 100});
+        return responses.buildSuccessResponse("Transaction Initialized", 200, response.data)
     } catch (error) {
         console.log(error);
         return responses.buildFailureResponse(error?.message, error?.statusCode)
     }
 }
 
+
+const paystackWebhook = async (payload) => {
+    try {
+        const foundTransaction = await Transaction.findOne({reference: payload.data.reference})
+        const updateObject = {
+            transactionId: payload.data.id,
+            channel: payload.data.channel,
+            currency: payload.data.currency,
+            ipAddress: payload.data.ip_address,
+            paidAt: payload.data.paid_At,
+            status: payload.data.status,
+        };
+
+        const updatedTransaction = await Transaction.findByIdAndUpdate(
+            {_id: foundTransaction._id},
+            updateObject, {new: true}
+        );
+        console.log(updatedTransaction)
+        return responses.buildSuccessResponse("Transaction noted", 200);
+    } catch (error) {
+       console.log(error);
+        
+    }
+}
+
+// const checkPaymentStatus = async () => {
+//     try {
+//         const transaction = await transactionReference
+//         if(transaction.status === success)
+//         return {
+//             status: 'success',
+//             amount: 1000,
+//             logged_user: '',
+//             message: 'Payment was successful.',
+//         }
+//     } catch (error) {
+//        return responses.buildFailureResponse("Payment not successful", error?.statusCode)
+//     }
+// }
+
 module.exports = {
-    initiatePayment
+    initiatePayment,
+    paystackWebhook,
 }
