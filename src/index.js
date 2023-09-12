@@ -2,11 +2,14 @@ const express = require('express')
 const dotenv = require('dotenv')
 const rateLimit = require('express-rate-limit');
 const morgan = require('morgan');
+//const job = require('../src/utils/cron-ping');
 
 
-const companiesRouter = require("./routes/companies.routes")
-const paymentsRouter  = require("./routes/payments.routes")
-const connectDB = require("./configs/database")
+
+const companiesRouter = require("./routes/companies.routes");
+const paymentsRouter  = require("./routes/payments.routes");
+const connectDB = require("./configs/database");
+const seedAdmin = require('./seeding/index');
 
 dotenv.config()
 const app = express()
@@ -21,6 +24,8 @@ const limiter = rateLimit({
 
 // connecting to db here
 connectDB(process.env.MONGO_URI)
+//job.start();
+seedAdmin();
 
 app.use(express.json())
 app.use(morgan('combined'));

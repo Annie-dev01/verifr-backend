@@ -274,7 +274,7 @@ const resetPassword = async (payload) => {
   );
 };
 
-const Search = async (query) => {
+const search = async (query) => {
   try {
      const searchKeyword = query.search
      ?{
@@ -304,5 +304,5 @@ module.exports = {
   getAllCompanies,
   forgotPassword,
   resetPassword,
-  Search,
+  search,
 };

@@ -49,8 +49,8 @@ const resetPassword = async (req, res) => {
 };
 
 // search comapnies function
-const Search = async (req, res) => {
-  const data = await companyServices.Search(req.query);
+const search = async (req, res) => {
+  const data = await companyServices.search(req.query);
   res.status(data.statusCode).json(data);
 };
 
@@ -62,5 +62,5 @@ module.exports = {
   getAllCompanies,
   forgotPassword,
   resetPassword,
-  Search,
+  search,
 };
