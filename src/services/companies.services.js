@@ -193,13 +193,29 @@ const login = async (payload) => {
   }
 };
 
-async function getAllCompanies() {
+async function getAllCompanies(query = {}) {
   try {
-    const companies = await Company.find();
+    const paginate = {
+      skip: 0,
+      limit: 10,
+    };
+    if (query.skip && query.limit) {
+      paginate.skip = query.skip;
+      paginate.limit = query.limit;
+    }
+    console.log({ query });
+    const companies = await Company.find(query)
+    .skip(paginate.skip)
+    .limit(paginate.limit);
+    const totalCounts = await Company.countDocuments(query);
     return responses.buildSuccessResponse(
       'Successfully fetched all companies',
-      200,
-      companies
+      200, {
+        data: companies,
+        page: Number(paginate.skip) + 1,
+        noPerPage: Number(paginate.limit),
+        totalCounts,
+      }
     );
   } catch (error) {
     return responses.buildFailureResponse('Failed to fetch companies', 500);
@@ -274,7 +290,7 @@ const resetPassword = async (payload) => {
   );
 };
 
-const search = async (query) => {
+const findStaff = async (query) => {
   try {
      const searchKeyword = query.search
      ?{
@@ -287,8 +303,8 @@ const search = async (query) => {
      company: query.company,
      }
      : {};
-     const foundSearch = await Staff.find(searchKeyword);
-     return responses.buildSuccessResponse('Search done', 200, foundSearch)
+     const foundStaff = await Staff.find(searchKeyword);
+     return responses.buildSuccessResponse('Staff fetched', 200, foundStaff)
     
   } catch (error) {
     console.log
@@ -304,5 +320,5 @@ module.exports = {
   getAllCompanies,
   forgotPassword,
   resetPassword,
-  search,
+  findStaff,
 };

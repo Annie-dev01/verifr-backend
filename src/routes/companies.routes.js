@@ -16,7 +16,7 @@ router.post('/login', inputValidators.adminLoginValidator, companyController.log
 router.get('/', companyController.getAllCompanies);
 router.post('/forgot-password', companyController.forgotPassword);
 router.post('/reset-password', companyController.resetPassword);
-router.get('/search', companyController.search);
+router.get('/staff', companyController.findStaff);
 
 
 module.exports = router;
